@@ -11,10 +11,10 @@ if sys.version_info[0] == 2:
     sys.setdefaultencoding('utf8')
 
 def get_status():
-    return subprocess.run(['playerctl', '-p', 'spotify', 'status'], encoding='utf-8', stdout=subprocess.PIPE).stdout
+    return subprocess.check_output(['playerctl', '-p', 'spotify', 'status']).decode('utf-8')
 
 def get_playing():
-    return subprocess.run(['playerctl', '-p', 'spotify', 'metadata', '--format', '{{artist}} - {{title}}'], encoding='utf-8', stdout=subprocess.PIPE).stdout[:-1]
+    return subprocess.check_output(['playerctl', '-p', 'spotify', 'metadata', '--format', '{{artist}} - {{title}}']).decode('utf-8')[:-1]
 
 def read_line():
     """ Interrupted respecting reader for stdin. """

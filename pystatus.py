@@ -10,27 +10,11 @@ if sys.version_info[0] == 2:
     reload(sys)
     sys.setdefaultencoding('utf8')
 
-dir_path=os.path.dirname(os.path.realpath(__file__))
-
-
 def get_status():
-    spotify_read = subprocess.check_output("%s/getInfo.sh status" % dir_path, shell=True)
-    spotify_status=spotify_read.decode('utf-8')
-    return spotify_status
-    #sys.stdout.write(spotify_status)
+    return subprocess.run(['playerctl', '-p', 'spotify', 'status'], encoding='utf-8', stdout=subprocess.PIPE).stdout
 
-def get_artist():
-    spotify_read = subprocess.check_output("%s/getInfo.sh artist" % dir_path, shell=True)
-    spotify_artist=spotify_read.decode('utf-8')
-    return spotify_artist[:-1]
-    #sys.stdout.write(spotify_artist)
-
-def get_song():
-    spotify_read = subprocess.check_output("%s/getInfo.sh song" % dir_path, shell=True)
-    spotify_song=spotify_read.decode('utf-8')
-    return spotify_song[:-1]
-    #sys.stdout.write(spotify_song)
-
+def get_playing():
+    return subprocess.run(['playerctl', '-p', 'spotify', 'metadata', '--format', '{{artist}} - {{title}}'], encoding='utf-8', stdout=subprocess.PIPE).stdout[:-1]
 
 def read_line():
     """ Interrupted respecting reader for stdin. """
@@ -54,8 +38,6 @@ def get_governor():
     with open('/sys/devices/platform/i5k_amb.0/temp4_input') as fp:
         return fp.readlines()[0].strip()
 
-
-
 if __name__ == '__main__':
     # Skip the first line which contains the version header.
     print_line(read_line())
@@ -73,7 +55,7 @@ if __name__ == '__main__':
             j = json.loads(line)
             # insert information into the start of the json, but could be anywhere
             # CHANGE THIS LINE TO INSERT SOMETHING ELSE
-            j.insert(0, {'color' : '#9ec600', 'full_text' : ' %s - %s' % (get_artist(), get_song()) , 'name' : 'spotify'})
+            j.insert(0, {'color' : '#9ec600', 'full_text' : ' %s' % (get_playing()) , 'name' : 'spotify'})
             # and echo back new encoded json
             print_line(prefix+json.dumps(j))
         else:

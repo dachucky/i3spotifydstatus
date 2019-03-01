@@ -9,7 +9,7 @@ i3spotifystatus is a tiny python (with even smaller bash script because I was to
 
 ### What you'll need:
 * DBus
-* [@csssuf](https://github.com/csssuf)'s awk script, you can find it [here](https://gist.github.com/csssuf/13213f23191b92a7ce77#file-spotify_song-awk)
+* playerctl >= 2.0.1
 * Spotify client (obviously)
 * You'll need FontAwesome if you want to display spotify logo on the bar.
 

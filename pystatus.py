@@ -4,7 +4,6 @@
 import sys
 import json
 import subprocess
-import os
 
 if sys.version_info[0] == 2:
     reload(sys)

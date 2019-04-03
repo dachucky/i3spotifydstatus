@@ -10,7 +10,10 @@ if sys.version_info[0] == 2:
     sys.setdefaultencoding('utf8')
 
 def get_status():
-    return subprocess.check_output(['playerctl', '-p', 'spotify', 'status']).decode('utf-8')
+    try:
+        return subprocess.check_output(['playerctl', '-p', 'spotify', 'status']).decode('utf-8') in ['Playing\n']
+    except subprocess.CalledProcessError as err:
+        return False
 
 def get_playing():
     return subprocess.check_output(['playerctl', '-p', 'spotify', 'metadata', '--format', '{{artist}} - {{title}}']).decode('utf-8')[:-1]
@@ -50,7 +53,7 @@ if __name__ == '__main__':
         # ignore comma at start of lines
         if line.startswith(','):
             line, prefix = line[1:], ','
-        if get_status() in ['Playing\n']:
+        if get_status():
             j = json.loads(line)
             # insert information into the start of the json, but could be anywhere
             # CHANGE THIS LINE TO INSERT SOMETHING ELSE

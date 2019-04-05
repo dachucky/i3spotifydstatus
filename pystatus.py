@@ -16,7 +16,10 @@ def get_status():
         return False
 
 def get_playing():
-    return subprocess.check_output(['playerctl', '-p', 'spotify', 'metadata', '--format', '{{artist}} - {{title}}']).decode('utf-8')[:-1]
+    try:
+        return subprocess.check_output(['playerctl', '-p', 'spotify', 'metadata', '--format', '{{artist}} - {{title}}']).decode('utf-8')[:-1]
+    except subprocess.CalledProcessError as err:
+        return
 
 def read_line():
     """ Interrupted respecting reader for stdin. """
